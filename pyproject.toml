@@ -1,0 +1,24 @@
+[project]
+name = "guia-ml-dl-flet"
+version = "0.1.0"
+description = "MVP offline em Flet para ensinar Machine Learning e Deep Learning"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "flet>=0.28.0"
+]
+
+[tool.flet]
+product = "Guia Prático ML & DL"
+company = "MVP Educacional"
+copyright = "Copyright (c) 2026"
+
+[tool.flet.app]
+path = "src"
+module = "main"
+
+[tool.flet.android]
+split_per_abi = false
+
+[tool.flet.android.permission]
+# App offline. Nenhuma permissão especial é necessária.
