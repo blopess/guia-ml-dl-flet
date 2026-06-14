@@ -1,24 +1,54 @@
-[project]
-name = "guia-ml-dl-flet"
-version = "0.1.0"
-description = "MVP offline em Flet para ensinar Machine Learning e Deep Learning"
-readme = "README.md"
-requires-python = ">=3.10"
-dependencies = [
-    "flet>=0.28.0"
-]
+name: Build Android APK
 
-[tool.flet]
-product = "Guia Prático ML & DL"
-company = "MVP Educacional"
-copyright = "Copyright (c) 2026"
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - master
 
-[tool.flet.app]
-path = "src"
-module = "main"
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
 
-[tool.flet.android]
-split_per_abi = false
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-[tool.flet.android.permission]
-# App offline. Nenhuma permissão especial é necessária.
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install Linux dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libgtk-3-dev
+
+      - name: Install Flet
+        run: |
+          python -m pip install --upgrade pip
+          pip install flet
+
+      - name: Show project files
+        run: |
+          ls -la
+          find . -maxdepth 4 -type f
+
+      - name: Build Android APK
+        run: |
+          flet build --verbose --yes apk
+
+      - name: Upload APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: guia-ml-dl-apk
+          path: |
+            build/apk/**/*.apk
+            build/**/*.apk
