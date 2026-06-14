@@ -7,6 +7,10 @@ on:
       - main
       - master
 
+env:
+  FLET_CLI_NO_RICH_OUTPUT: 1
+  PYTHONUTF8: 1
+
 jobs:
   build-apk:
     runs-on: ubuntu-latest
@@ -36,14 +40,15 @@ jobs:
           python -m pip install --upgrade pip
           pip install flet
 
-      - name: Show project files
+      - name: Check project structure
         run: |
+          pwd
           ls -la
-          find . -maxdepth 3 -type f
+          find . -maxdepth 4 -type f
 
       - name: Build Android APK
         run: |
-          flet build apk --verbose
+          yes y | flet build apk --verbose
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -51,3 +56,4 @@ jobs:
           name: guia-ml-dl-apk
           path: |
             build/apk/**/*.apk
+            build/**/*.apk
